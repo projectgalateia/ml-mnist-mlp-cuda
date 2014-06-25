@@ -59,7 +59,7 @@ int main(int argc, const  char **argv)
 #include <cublas_v2.h>
 
 const static float dt = 1.0E-01f;
-const static float threshold = 1.0E-01f;
+const static float threshold = 1.0E-05f;
 
 struct Layer {
 	float *output;
@@ -229,9 +229,9 @@ static void learn()
 	cublasCreate(&handle);
 
 	layers.push_back(new Layer(0, 28*28));
-	layers.push_back(new Layer(28*28, 1024));
-	layers.push_back(new Layer(1024, 1024));
-	layers.push_back(new Layer(1024, 10));
+	layers.push_back(new Layer(28*28, 500));
+	layers.push_back(new Layer(500, 300));
+	layers.push_back(new Layer(300, 10));
 
 	float err;
 
@@ -248,18 +248,9 @@ static void learn()
 
 			makeError<<<10, 1>>>(ol->d_preact, ol->output, train_set[i].label, 10);
 
-			/*cudaMemcpy(test, ol->d_preact, sizeof(float) * 10, cudaMemcpyDeviceToHost);*/
-			/*printf("%d\n", train_set[i].label);*/
-			/*printf("%e %e %e %e %e\n", test[0], test[1], test[2], test[3], test[4]);*/
-			/*printf("%e %e %e %e %e\n", test[5], test[6], test[7], test[8], test[9]);*/
-			/*cudaMemcpy(test, ol->output, sizeof(float) * 10, cudaMemcpyDeviceToHost);*/
-			/*printf("%e %e %e %e %e\n", test[0], test[1], test[2], test[3], test[4]);*/
-			/*printf("%e %e %e %e %e\n", test[5], test[6], test[7], test[8], test[9]);*/
-
 			cublasSnrm2(handle, 10, ol->d_preact, 1, &tmp);
 
 			err += tmp;
-			/*fprintf(stdout, "tmp: %e\n", tmp);*/
 		}
 
 		err /= train_cnt;

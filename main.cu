@@ -59,7 +59,7 @@ int main(int argc, const  char **argv)
 #include <cublas_v2.h>
 
 const static float dt = 1.0E-01f;
-const static float threshold = 1.0E-05f;
+const static float threshold = 1.0E-04f;
 
 struct Layer {
 	float *output;
